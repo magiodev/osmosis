@@ -535,11 +535,13 @@ func (s *IntegrationTestSuite) TestAAAConcentratedLiquidity() {
 	amountRemainingAfterStep1 := uosmoInDec_Swap2.Sub(amountInToGetToNextInitTick).Sub(feeCharge_Swap2_Step1) // 132857707.46598141293134257720202020202020202020202
 	feeCharge_Swap2_Step2 := amountRemainingAfterStep1.Sub(amountInToGetToTickAfterInitialized)
 
-	feeCharge_Swap2_Step1.QuoMut(currentLiquidity)                                    // per unit of virtual liquidity
-	feeCharge_Swap2_Step2.QuoMut(liquidityAfterSwap)                                  // per unit of virtual liquidity
-	fmt.Println("total fee charge", feeCharge_Swap2_Step2.Add(feeCharge_Swap2_Step1)) // 67421966.7404
+	feeCharge_Swap2_Step1.QuoMut(currentLiquidity)   // per unit of virtual liquidity
+	feeCharge_Swap2_Step2.QuoMut(liquidityAfterSwap) // per unit of virtual liquidity
 
-	globalFeeGrowth.AddMut(feeCharge_Swap2_Step1.Add(feeCharge_Swap2_Step1))
+	fmt.Println("total fee charge", feeCharge_Swap2_Step2.Add(feeCharge_Swap2_Step1)) // 67421966.7404
+	fmt.Println(globalFeeGrowth)
+	globalFeeGrowth.AddMut(feeCharge_Swap2_Step1.Add(feeCharge_Swap2_Step2))
+	fmt.Println(globalFeeGrowth)
 
 	// Calculate uncollected fees for position, which liquidity will only be live part of the swap
 	feesUncollectedAddress1Position1_Swap2 := calculateUncollectedFees(
@@ -549,6 +551,13 @@ func (s *IntegrationTestSuite) TestAAAConcentratedLiquidity() {
 		calculateFeeGrowthInside(feeGrowthGlobal_Swap1, sdk.ZeroDec(), sdk.ZeroDec()),
 		feeGrowthGlobal_Swap1.Add(feeCharge_Swap2_Step1), // cannot use globalFeeGrowth, it was already increased by second swap's step
 	)
+	// fees for address3 position 2:
+	// 323939.3036359181 swap 2 step 2 fees
+	// 22473984.46789179 swap 2 step 1 fees
+	// 11550.65836870395 swap 1 fees
+
+	// actual fees sum got: 23149823
+	// expected: 22809474
 
 	s.Require().Equal(
 		addr1BalancesBefore.AmountOf("uosmo").Add(feesUncollectedAddress1Position1_Swap2.TruncateInt()),
@@ -565,7 +574,7 @@ func (s *IntegrationTestSuite) TestAAAConcentratedLiquidity() {
 		positionsAddress3[1].Liquidity,
 		sdk.ZeroDec(),
 		sdk.ZeroDec(),
-		calculateFeeGrowthInside(feeGrowthGlobal_Swap1, sdk.ZeroDec(), sdk.ZeroDec()), // have never crossed this position's ticks
+		sdk.ZeroDec(),
 		globalFeeGrowth,
 	)
 
@@ -580,8 +589,7 @@ func (s *IntegrationTestSuite) TestAAAConcentratedLiquidity() {
 		addr3BalancesBefore.AmountOf("uosmo").Add(feesUncollectedAddress3Position2_Swap2.TruncateInt()),
 		addr3BalancesAfter.AmountOf("uosmo"),
 	)
-	// Fees should be: 44947968.98073156506
-	// Fees actual: 23149823
+	// 647878.658815084765618455 + 22473984.46789179804
 
 	// Swap 3
 	// Asserts:
