@@ -126,7 +126,7 @@ def estimate_two_consecutive_positions_zfo_in_given_out(swap_fee: str, expected_
 
     is_zero_for_one = True
     swap_fee = sdk_dec.new(swap_fee)
-    token_out = sdk_dec.new("2000000")
+    token_out = sdk_dec.new("1999999")
 
     tick_ranges = [
         SqrtPriceRange(5000, 4545, sdk_dec.new("1517882343.751510418088349649")),
