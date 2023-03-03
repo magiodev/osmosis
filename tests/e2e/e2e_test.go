@@ -309,7 +309,7 @@ func (s *IntegrationTestSuite) TestAAAConcentratedLiquidity() {
 	s.Require().Equal(concentratedPool.GetCurrentSqrtPrice(), sdk.ZeroDec())
 	s.Require().Equal(concentratedPool.GetLiquidity(), sdk.ZeroDec())
 
-	// Assert contents of the pool are valid (that we explicitly hardcoded)
+	// Assert contents of the pool are valid (that we explicitly specified)
 	s.Require().Equal(concentratedPool.GetId(), poolID)
 	s.Require().Equal(concentratedPool.GetToken0(), denom0)
 	s.Require().Equal(concentratedPool.GetToken1(), denom1)
