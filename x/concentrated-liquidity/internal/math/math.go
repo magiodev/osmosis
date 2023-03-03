@@ -96,7 +96,7 @@ func CalcAmount1Delta(liq, sqrtPriceA, sqrtPriceB sdk.Dec, roundUp bool) sdk.Dec
 
 // getNextSqrtPriceFromAmount0RoundingUp utilizes the current squareRootPrice, liquidity of denom0, and amount of denom0 that still needs
 // to be swapped in order to determine the next squareRootPrice
-// Note: we are using only using the precise formula here.
+// Note: we are only using the precise formula here.
 func GetNextSqrtPriceFromAmount0RoundingUp(sqrtPriceCurrent, liquidity, amountRemaining sdk.Dec) (sqrtPriceNext sdk.Dec) {
 	if amountRemaining.Equal(sdk.ZeroDec()) {
 		return sqrtPriceCurrent
