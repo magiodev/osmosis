@@ -7,8 +7,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/osmosis-labs/osmosis/v14/x/concentrated-liquidity/internal/math"
-	types "github.com/osmosis-labs/osmosis/v14/x/concentrated-liquidity/types"
+	"github.com/osmosis-labs/osmosis/v15/x/concentrated-liquidity/internal/math"
+	types "github.com/osmosis-labs/osmosis/v15/x/concentrated-liquidity/types"
 )
 
 // createPosition creates a concentrated liquidity position in range between lowerTick and upperTick
@@ -158,6 +158,9 @@ func (k Keeper) withdrawPosition(ctx sdk.Context, poolId uint64, owner sdk.AccAd
 		if _, err := k.collectFees(ctx, poolId, owner, lowerTick, upperTick); err != nil {
 			return sdk.Int{}, sdk.Int{}, err
 		}
+
+		// TODO: claim incentives (when implemented) to clear accum record from state
+
 		if err := k.deletePosition(ctx, poolId, owner, lowerTick, upperTick, frozenUntil); err != nil {
 			return sdk.Int{}, sdk.Int{}, err
 		}
